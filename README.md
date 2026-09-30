@@ -10,7 +10,7 @@ RESTful API murni untuk resource **lukisan** (Topik 14, Galeri Seni), dibuat den
 - **Resource:** `/paintings`
 
 ## Repository dan deployment
-- GitHub: repository publik yang akan di-push sebagai `https://github.com/Ridzz05/tugas1-restful-2428240069`.
+- GitHub: https://github.com/Ridzz05/tugas1-restful-2428240069
 - Vercel: `TAMBAHKAN_URL_VERCEL_SETELAH_DEPLOY`
 
 ## Menjalankan secara lokal
