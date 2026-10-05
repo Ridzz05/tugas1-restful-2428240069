@@ -1,231 +1,309 @@
-// Mengimpor Express untuk membuat aplikasi REST API.
-const express = require('express');
+// ===========================================================================
+// Tugas 1 - RESTful API Express.js
+// Nama    : M. Rizki Algipari
+// NIM     : 2428240069
+// Kelas   : SI5B
+// Topik 14: Galeri Seni - Lukisan
+// Resource: /paintings
+// ===========================================================================
 
-// Membuat instance aplikasi Express.
+// Impor modul express
+const express = require("express");
+
+// Membuat instance aplikasi Express
 const app = express();
 
-// Middleware untuk membaca request body berformat JSON.
+// Middleware bawaan Express untuk membaca body request berformat JSON (req.body)
 app.use(express.json());
 
-// Data awal lukisan disimpan dalam array di memori (tanpa database).
-const paintings = [
+// ---------------------------------------------------------------------------
+// Data awal lukisan (disimpan di memori, tanpa database)
+// ---------------------------------------------------------------------------
+let paintings = [
+  // Data lukisan ke-1
   {
     id: 1,
-    judul: 'Senja di Musi',
-    pelukis: 'Rahmat Hidayat',
-    aliran: 'realisme',
+    judul: "Senja di Musi",
+    pelukis: "Rahmat Hidayat",
+    aliran: "realisme",
     tahunDibuat: 2023,
     harga: 7500000,
   },
+  // Data lukisan ke-2
   {
     id: 2,
-    judul: 'Pasar 16 Ilir',
-    pelukis: 'Siti Marwah',
-    aliran: 'impresionisme',
+    judul: "Tari Cahaya Pagi",
+    pelukis: "Siti Nurhaliza",
+    aliran: "impresionisme",
     tahunDibuat: 2021,
     harga: 5200000,
   },
+  // Data lukisan ke-3
   {
     id: 3,
-    judul: 'Jembatan Ampera',
-    pelukis: 'Dimas Pratama',
-    aliran: 'realisme',
+    judul: "Bentuk Tanpa Nama",
+    pelukis: "Bagas Prasetyo",
+    aliran: "abstrak",
     tahunDibuat: 2024,
-    harga: 9100000,
+    harga: 9800000,
   },
 ];
 
-// ID baru dimulai dari angka setelah ID terbesar yang ada.
-let nextId = Math.max(...paintings.map((painting) => painting.id)) + 1;
+// Penomoran id otomatis untuk data baru (lanjutan dari id terakhir data awal)
+let nextId = 4;
 
-// Daftar field untuk lukisan. Tahun dibuat bersifat opsional.
-const requiredFields = ['judul', 'pelukis', 'aliran', 'harga'];
-const allowedFields = [...requiredFields, 'tahunDibuat'];
+// ---------------------------------------------------------------------------
+// Fungsi bantu validasi body lukisan
+// Mengembalikan pesan error (string) bila tidak valid, atau null bila valid
+// ---------------------------------------------------------------------------
+function validasiLukisan(body) {
+  // Field string wajib: judul, pelukis, aliran
+  const fieldString = ["judul", "pelukis", "aliran"];
 
-// Validasi body POST/PUT. Mengembalikan pesan kesalahan, atau null jika valid.
-function validatePainting(body) {
-  if (!body || typeof body !== 'object' || Array.isArray(body)) {
-    return 'Body request harus berupa objek JSON';
-  }
-
-  for (const field of requiredFields) {
-    if (typeof body[field] !== 'string' && field !== 'harga') {
+  // Cek tiap field string: harus ada, bertipe string, dan tidak kosong setelah trim
+  for (const field of fieldString) {
+    if (typeof body[field] !== "string" || body[field].trim() === "") {
       return `Field ${field} wajib diisi`;
     }
-    if (field !== 'harga' && body[field].trim() === '') {
-      return `Field ${field} wajib diisi`;
-    }
-    if (field === 'harga' && (body.harga === '' || body.harga === null || body.harga === undefined)) {
-      return 'Field harga wajib diisi';
-    }
   }
 
-  if (typeof body.harga !== 'number' || !Number.isFinite(body.harga) || body.harga < 0) {
-    return 'Field harga harus berupa angka non-negatif';
+  // Field harga wajib berupa number (bukan string) dan bukan NaN
+  if (typeof body.harga !== "number" || Number.isNaN(body.harga)) {
+    return "Field harga wajib diisi dan harus berupa angka";
   }
 
-  if (Object.hasOwn(body, 'tahunDibuat') &&
-      (!Number.isInteger(body.tahunDibuat) || body.tahunDibuat < 0)) {
-    return 'Field tahunDibuat harus berupa bilangan bulat non-negatif';
+  // Field tahunDibuat opsional: bila dikirim harus number dan bukan NaN
+  if (
+    body.tahunDibuat !== undefined &&
+    body.tahunDibuat !== null &&
+    (typeof body.tahunDibuat !== "number" || Number.isNaN(body.tahunDibuat))
+  ) {
+    return "Field tahunDibuat harus berupa angka";
   }
 
+  // Lolos semua validasi
   return null;
 }
 
-// Membentuk objek baru dari field yang diizinkan; ID selalu ditentukan server.
-function createPainting(body, id) {
-  const painting = { id };
-  for (const field of allowedFields) {
-    if (Object.hasOwn(body, field)) painting[field] = body[field];
-  }
-  return painting;
-}
-
-// GET / - Informasi API dan daftar endpoint.
-app.get('/', (req, res) => {
-  res.json({
-    nama: 'M. Rizki Algipari',
-    nim: '2428240069',
-    kelas: 'SI5B',
-    nomorTopik: 14,
-    topik: 'Galeri Seni - Lukisan',
-    resource: '/paintings',
+// ---------------------------------------------------------------------------
+// GET /
+// Menampilkan informasi API
+// Response: 200 { nama, nim, kelas, topik, resource, endpoints }
+// ---------------------------------------------------------------------------
+app.get("/", (req, res) => {
+  res.status(200).json({
+    nama: "M. Rizki Algipari",
+    nim: "2428240069",
+    kelas: "SI5B",
+    topik: "Topik 14 - Galeri Seni: Lukisan",
+    resource: "/paintings",
     endpoints: [
-      'GET /paintings',
-      'GET /paintings/:id',
-      'POST /paintings',
-      'PUT /paintings/:id',
-      'DELETE /paintings/:id',
-      'GET /paintings?aliran=realisme',
+      "GET /",
+      "GET /paintings",
+      "GET /paintings/:id",
+      "GET /paintings?aliran=<aliran>",
+      "POST /paintings",
+      "PUT /paintings/:id",
+      "DELETE /paintings/:id",
     ],
   });
 });
 
-// GET /paintings - Ambil semua lukisan atau filter berdasarkan aliran.
-app.get('/paintings', (req, res) => {
-  const { aliran } = req.query;
-  const result = aliran === undefined
-    ? paintings
-    : paintings.filter((painting) => painting.aliran === aliran);
-  res.json(result);
+// ---------------------------------------------------------------------------
+// GET /paintings
+// Mengambil seluruh data lukisan (array langsung, tanpa wrapper)
+// Query opsional: ?aliran=<aliran> untuk memfilter berdasarkan aliran
+// Response: 200 [ ... ]
+// ---------------------------------------------------------------------------
+app.get("/paintings", (req, res) => {
+  // Filter berdasarkan query aliran bila dikirim
+  if (req.query.aliran) {
+    const hasil = paintings.filter((p) => p.aliran === req.query.aliran);
+    return res.status(200).json(hasil);
+  }
+
+  // Tanpa query: kembalikan semua data
+  res.status(200).json(paintings);
 });
 
-// GET /paintings/:id - Ambil satu lukisan berdasarkan ID.
-app.get('/paintings/:id', (req, res) => {
+// ---------------------------------------------------------------------------
+// GET /paintings/:id
+// Mengambil satu data lukisan berdasarkan id
+// Response: 200 <objek> | 404 { status, message, data }
+// ---------------------------------------------------------------------------
+app.get("/paintings/:id", (req, res) => {
+  // Konversi parameter id (string) menjadi number
   const id = Number(req.params.id);
-  const painting = paintings.find((item) => item.id === id);
 
-  if (!painting) {
+  // Cari data dengan id yang cocok
+  const lukisan = paintings.find((p) => p.id === id);
+
+  // Bila tidak ditemukan
+  if (!lukisan) {
     return res.status(404).json({
-      status: 'error',
-      message: `Data lukisan dengan id ${req.params.id} tidak ditemukan`,
+      status: "error",
+      message: `Data dengan id ${req.params.id} tidak ditemukan`,
       data: null,
     });
   }
 
-  return res.json(painting);
+  // Bila ditemukan: kirim objek langsung
+  res.status(200).json(lukisan);
 });
 
+// ---------------------------------------------------------------------------
 // POST /paintings
-// Body: { "judul": "Senja di Musi", "pelukis": "Rahmat Hidayat", "aliran": "realisme", "tahunDibuat": 2023, "harga": 7500000 }
-app.post('/paintings', (req, res) => {
-  const validationError = validatePainting(req.body);
-  if (validationError) {
+// Menambah data lukisan baru
+// Body: { judul, pelukis, aliran, tahunDibuat?, harga }
+// Response: 201 { status, message, data } | 400 { status, message, data }
+// ---------------------------------------------------------------------------
+app.post("/paintings", (req, res) => {
+  // Validasi seluruh field wajib
+  const pesanError = validasiLukisan(req.body);
+
+  // Bila validasi gagal
+  if (pesanError) {
     return res.status(400).json({
-      status: 'error',
-      message: validationError,
+      status: "error",
+      message: pesanError,
       data: null,
     });
   }
 
-  const created = createPainting(req.body, nextId++);
-  paintings.push(created);
-  return res.status(201).json({
-    status: 'success',
-    message: 'Data lukisan berhasil ditambahkan',
-    data: created,
+  // Membuat objek lukisan baru dengan id otomatis
+  const lukisanBaru = {
+    id: nextId, // id dari penomoran otomatis
+    judul: req.body.judul,
+    pelukis: req.body.pelukis,
+    aliran: req.body.aliran,
+    tahunDibuat: req.body.tahunDibuat ?? null, // opsional
+    harga: req.body.harga,
+  };
+
+  // Simpan ke array data
+  paintings.push(lukisanBaru);
+
+  // Naikkan penomoran id untuk data berikutnya
+  nextId++;
+
+  // Kirim respons sukses
+  res.status(201).json({
+    status: "success",
+    message: "Data berhasil ditambahkan",
+    data: lukisanBaru,
   });
 });
 
+// ---------------------------------------------------------------------------
 // PUT /paintings/:id
-// Body: { "judul": "Senja di Musi", "pelukis": "Rahmat Hidayat", "aliran": "realisme", "tahunDibuat": 2023, "harga": 7500000 }
-app.put('/paintings/:id', (req, res) => {
+// Mengubah seluruh field lukisan (kecuali id) berdasarkan id
+// Body: { judul, pelukis, aliran, tahunDibuat?, harga }
+// Response: 200 { status, message, data } | 400 | 404
+// ---------------------------------------------------------------------------
+app.put("/paintings/:id", (req, res) => {
+  // Konversi parameter id menjadi number
   const id = Number(req.params.id);
-  const index = paintings.findIndex((item) => item.id === id);
 
+  // Cari index data dengan id yang cocok
+  const index = paintings.findIndex((p) => p.id === id);
+
+  // Bila data tidak ditemukan
   if (index === -1) {
     return res.status(404).json({
-      status: 'error',
-      message: `Data lukisan dengan id ${req.params.id} tidak ditemukan`,
+      status: "error",
+      message: `Data dengan id ${req.params.id} tidak ditemukan`,
       data: null,
     });
   }
 
-  const validationError = validatePainting(req.body);
-  if (validationError) {
+  // Validasi seluruh field wajib
+  const pesanError = validasiLukisan(req.body);
+
+  // Bila validasi gagal
+  if (pesanError) {
     return res.status(400).json({
-      status: 'error',
-      message: validationError,
+      status: "error",
+      message: pesanError,
       data: null,
     });
   }
 
-  const updated = createPainting(req.body, id);
-  paintings[index] = updated;
-  return res.status(200).json({
-    status: 'success',
+  // Mengganti SELURUH field selain id (tahunDibuat menjadi null bila tidak dikirim)
+  const lukisanDiperbarui = {
+    id: id,
+    judul: req.body.judul,
+    pelukis: req.body.pelukis,
+    aliran: req.body.aliran,
+    tahunDibuat: req.body.tahunDibuat ?? null,
+    harga: req.body.harga,
+  };
+
+  // Timpa data lama dengan data hasil perubahan
+  paintings[index] = lukisanDiperbarui;
+
+  // Kirim respons sukses
+  res.status(200).json({
+    status: "success",
     message: `Data lukisan dengan id ${id} berhasil diperbarui`,
-    data: updated,
+    data: lukisanDiperbarui,
   });
 });
 
-// DELETE /paintings/:id - Hapus satu lukisan berdasarkan ID.
-app.delete('/paintings/:id', (req, res) => {
+// ---------------------------------------------------------------------------
+// DELETE /paintings/:id
+// Menghapus data lukisan berdasarkan id
+// Response: 200 { status, message, data } | 404 { status, message, data }
+// ---------------------------------------------------------------------------
+app.delete("/paintings/:id", (req, res) => {
+  // Konversi parameter id menjadi number
   const id = Number(req.params.id);
-  const index = paintings.findIndex((item) => item.id === id);
 
+  // Cari index data dengan id yang cocok
+  const index = paintings.findIndex((p) => p.id === id);
+
+  // Bila data tidak ditemukan
   if (index === -1) {
     return res.status(404).json({
-      status: 'error',
-      message: `Data lukisan dengan id ${req.params.id} tidak ditemukan`,
+      status: "error",
+      message: `Data dengan id ${req.params.id} tidak ditemukan`,
       data: null,
     });
   }
 
+  // Hapus satu data pada index tersebut
   paintings.splice(index, 1);
-  return res.status(200).json({
-    status: 'success',
+
+  // Kirim respons sukses
+  res.status(200).json({
+    status: "success",
     message: `Data lukisan dengan id ${id} berhasil dihapus`,
     data: null,
   });
 });
 
-// Catch-all 404 - Semua endpoint yang tidak terdaftar.
+// ---------------------------------------------------------------------------
+// Catch-all: menangani endpoint yang tidak dikenal (diletakkan paling bawah)
+// Response: 404 { status, message, data }
+// ---------------------------------------------------------------------------
 app.use((req, res) => {
   res.status(404).json({
-    status: 'error',
-    message: 'Endpoint tidak ditemukan',
+    status: "error",
+    message: "Endpoint tidak ditemukan",
     data: null,
   });
 });
 
-// Error handler menjaga response error tetap JSON, termasuk JSON body yang malformed.
-app.use((err, req, res, next) => {
-  if (res.headersSent) return next(err);
-  const statusCode = err.status === 400 ? 400 : 500;
-  return res.status(statusCode).json({
-    status: 'error',
-    message: statusCode === 400 ? 'Body JSON tidak valid' : 'Terjadi kesalahan pada server',
-    data: null,
-  });
-});
-
-// Server hanya listen saat file dijalankan langsung, bukan saat diimpor sebagai serverless function.
+// ---------------------------------------------------------------------------
+// Menjalankan server (hanya di luar mode production, mis. Vercel)
+// ---------------------------------------------------------------------------
 const PORT = process.env.PORT || 3000;
-if (require.main === module) {
+
+// Server hanya dijalankan saat lokal / development
+if (process.env.NODE_ENV !== "production") {
   app.listen(PORT, () => {
     console.log(`Server berjalan di http://localhost:${PORT}`);
   });
 }
 
+// Ekspor app agar bisa dipakai Vercel (serverless) dan pengujian
 module.exports = app;
