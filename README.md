@@ -1,43 +1,61 @@
-# Tugas 1 RESTful API — Lukisan
+# tugas1-restful-2428240069
 
-RESTful API murni untuk resource **lukisan** (Topik 14, Galeri Seni), dibuat dengan Node.js dan Express.js. Data menggunakan array di memori, sehingga akan kembali ke data awal ketika proses server/serverless runtime dimulai ulang.
+RESTful API Express.js sederhana untuk data lukisan (galeri seni).
 
-## Identitas
 - **Nama:** M. Rizki Algipari
 - **NIM:** 2428240069
 - **Kelas:** SI5B
-- **Nomor topik:** 14 — Galeri Seni: Lukisan
+- **Absen:** 14
+- **Topik:** Topik 14 — Galeri Seni: Lukisan
 - **Resource:** `/paintings`
 
-## Repository dan deployment
-- GitHub: https://github.com/Ridzz05/tugas1-restful-2428240069
-- Vercel: `TAMBAHKAN_URL_VERCEL_SETELAH_DEPLOY`
+## Tautan
 
-## Menjalankan secara lokal
-Persyaratan: Node.js LTS dan npm.
+**Repository GitHub:** https://github.com/Ridzz05/tugas1-restful-2428240069
+**Deployment Vercel:** (isi setelah deploy)
+
+## Cara Menjalankan Lokal
 
 ```bash
 npm install
+npm start
+```
+
+Mode development (auto-restart dengan nodemon):
+
+```bash
 npm run dev
 ```
 
-API berjalan di `http://localhost:3000`. Untuk menjalankan tanpa nodemon: `npm start`.
+Server berjalan di `http://localhost:3000`.
 
-## Endpoint
-| Method | Endpoint | Fungsi |
+## Struktur Field Lukisan
+
+| Field | Tipe | Wajib | Keterangan |
+|---|---|---|---|
+| `id` | number | otomatis | Dibuat otomatis oleh server |
+| `judul` | string | ya | Judul lukisan |
+| `pelukis` | string | ya | Nama pelukis |
+| `aliran` | string | ya | Aliran seni (bebas, tanpa daftar pilihan) |
+| `tahunDibuat` | number | tidak | Tahun pembuatan |
+| `harga` | number | ya | Harga lukisan |
+
+## Daftar Endpoint
+
+| Method | Endpoint | Keterangan |
 |---|---|---|
-| GET | `/` | Informasi API, identitas, dan daftar endpoint |
-| GET | `/paintings` | Ambil semua lukisan |
-| GET | `/paintings/:id` | Ambil satu lukisan berdasarkan ID |
-| GET | `/paintings?aliran=realisme` | Filter lukisan berdasarkan aliran |
-| POST | `/paintings` | Tambah lukisan (JSON; semua field wajib) |
-| PUT | `/paintings/:id` | Ganti seluruh data lukisan |
-| DELETE | `/paintings/:id` | Hapus lukisan |
+| GET | `/` | Informasi API |
+| GET | `/paintings` | Semua data lukisan |
+| GET | `/paintings?aliran=realisme` | Filter data berdasarkan aliran |
+| GET | `/paintings/:id` | Satu data lukisan berdasarkan id |
+| POST | `/paintings` | Menambah data lukisan |
+| PUT | `/paintings/:id` | Mengubah seluruh field data lukisan |
+| DELETE | `/paintings/:id` | Menghapus data lukisan |
 
-### Field
-`judul` (string, wajib), `pelukis` (string, wajib), `aliran` (string, wajib), `harga` (number non-negatif, wajib), `tahunDibuat` (integer non-negatif, opsional).
+Endpoint lain akan menghasilkan `404` dengan pesan `Endpoint tidak ditemukan`.
 
-Contoh body POST/PUT:
+## Contoh Body POST
+
 ```json
 {
   "judul": "Senja di Musi",
@@ -48,10 +66,16 @@ Contoh body POST/PUT:
 }
 ```
 
-GET mengembalikan objek/array secara langsung. POST, PUT, DELETE, dan error menggunakan `{ "status", "message", "data" }`. Request yang membutuhkan body harus memakai `Content-Type: application/json`.
+## Contoh Body PUT
 
-## Pengujian
-Import `postman_collection.json` ke Postman. Variabel koleksi `baseUrl` default-nya `http://localhost:3000`; setelah deploy, ubah nilainya ke URL Vercel.
+```json
+{
+  "judul": "Senja di Musi (Revisi)",
+  "pelukis": "Rahmat Hidayat",
+  "aliran": "impresionisme",
+  "tahunDibuat": 2024,
+  "harga": 8000000
+}
+```
 
-## Deployment ke Vercel
-Repository memakai `vercel.json` dan mengekspor Express app agar dijalankan sebagai function. Hubungkan repository publik ini melalui dashboard Vercel, deploy, lalu ubah URL di atas. Array data bersifat sementara dan dapat kembali ke data awal karena karakteristik serverless.
+`tahunDibuat` bersifat opsional. Jika tidak dikirim saat `PUT`, nilainya menjadi `null`.
