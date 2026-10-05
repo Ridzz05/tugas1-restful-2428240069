@@ -1,19 +1,19 @@
 {
   "name": "tugas1-restful-2428240069",
   "version": "1.0.0",
-  "description": "RESTful API Galeri Seni - Lukisan | Tugas 1 SI5B",
+  "description": "RESTful API Galeri Seni - Lukisan (Topik 14)",
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js"
   },
-  "keywords": ["express", "rest-api", "si5b", "paintings"],
+  "keywords": [],
   "author": "M. Rizki Algipari",
   "license": "ISC",
   "dependencies": {
-    "express": "^5.2.1"
+    "express": "^4.21.2"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.9"
   }
 }
