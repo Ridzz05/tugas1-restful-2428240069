@@ -1,0 +1,218 @@
+# Deployed URL: https://tugas1-restful-2428240069.vercel.app
+
+$ curl -i $BASE/
+HTTP/1.1 200 OK
+Age: 0
+Cache-Control: public, max-age=0, must-revalidate
+Content-Length: 284
+Content-Type: application/json; charset=utf-8
+Date: Mon, 05 Oct 2026 16:10:44 GMT
+Etag: W/"11c-gIU3jzqBmCXTMwlgj0nOr3hbnac"
+Server: Vercel
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Powered-By: Express
+X-Vercel-Cache: MISS
+X-Vercel-Id: sin1::iad1::z68z8-1791216644360-7acb9dd53c6c
+
+{"nama":"M. Rizki Algipari","nim":"2428240069","kelas":"SI5B","topik":"Topik 14 - Galeri Seni: Lukisan","resource":"/paintings","endpoints":["GET /","GET /paintings","GET /paintings/:id","GET /paintings?aliran=<aliran>","POST /paintings","PUT /paintings/:id","DELETE /paintings/:id"]}
+
+$ curl -i $BASE/paintings
+HTTP/1.1 200 OK
+Age: 0
+Cache-Control: public, max-age=0, must-revalidate
+Content-Length: 357
+Content-Type: application/json; charset=utf-8
+Date: Mon, 05 Oct 2026 16:10:45 GMT
+Etag: W/"165-hG+uhLDciLwFa1VOnl5Sj582jlc"
+Server: Vercel
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Powered-By: Express
+X-Vercel-Cache: MISS
+X-Vercel-Id: sin1::iad1::d5phx-1791216644997-86eba688db56
+
+[{"id":1,"judul":"Senja di Musi","pelukis":"Rahmat Hidayat","aliran":"realisme","tahunDibuat":2023,"harga":7500000},{"id":2,"judul":"Tari Cahaya Pagi","pelukis":"Siti Nurhaliza","aliran":"impresionisme","tahunDibuat":2021,"harga":5200000},{"id":3,"judul":"Bentuk Tanpa Nama","pelukis":"Bagas Prasetyo","aliran":"abstrak","tahunDibuat":2024,"harga":9800000}]
+
+$ curl -i $BASE/paintings/1
+HTTP/1.1 200 OK
+Age: 0
+Cache-Control: public, max-age=0, must-revalidate
+Content-Length: 114
+Content-Type: application/json; charset=utf-8
+Date: Mon, 05 Oct 2026 16:10:46 GMT
+Etag: W/"72-RcbDQFNulfg0p1MVtIQ2FGukvmA"
+Server: Vercel
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Powered-By: Express
+X-Vercel-Cache: MISS
+X-Vercel-Id: sin1::iad1::rrx9v-1791216645641-b496f6df588e
+
+{"id":1,"judul":"Senja di Musi","pelukis":"Rahmat Hidayat","aliran":"realisme","tahunDibuat":2023,"harga":7500000}
+
+$ curl -i $BASE/paintings/99
+HTTP/1.1 404 Not Found
+Age: 0
+Cache-Control: public, max-age=0, must-revalidate
+Content-Length: 76
+Content-Type: application/json; charset=utf-8
+Date: Mon, 05 Oct 2026 16:10:46 GMT
+Etag: W/"4c-rMUh+y54SJ96aKswIwB/bvt+xYs"
+Server: Vercel
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Powered-By: Express
+X-Vercel-Cache: MISS
+X-Vercel-Id: sin1::iad1::svsb2-1791216646280-4ca64bb46fe7
+
+{"status":"error","message":"Data dengan id 99 tidak ditemukan","data":null}
+
+$ curl -i "$BASE/paintings?aliran=realisme"
+HTTP/1.1 200 OK
+Age: 0
+Cache-Control: public, max-age=0, must-revalidate
+Content-Length: 116
+Content-Type: application/json; charset=utf-8
+Date: Mon, 05 Oct 2026 16:10:46 GMT
+Etag: W/"74-156sGglRMssWAc7F/4WKRhqK5DI"
+Server: Vercel
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Powered-By: Express
+X-Vercel-Cache: MISS
+X-Vercel-Id: sin1::iad1::shgcx-1791216646680-4bc6375f4474
+
+[{"id":1,"judul":"Senja di Musi","pelukis":"Rahmat Hidayat","aliran":"realisme","tahunDibuat":2023,"harga":7500000}]
+
+$ curl -i "$BASE/paintings?aliran=tidakada"
+HTTP/1.1 200 OK
+Age: 0
+Cache-Control: public, max-age=0, must-revalidate
+Content-Length: 2
+Content-Type: application/json; charset=utf-8
+Date: Mon, 05 Oct 2026 16:10:47 GMT
+Etag: W/"2-l9Fw4VUO7kr8CvBlt4zaMCqXZ0w"
+Server: Vercel
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Powered-By: Express
+X-Vercel-Cache: MISS
+X-Vercel-Id: sin1::iad1::8g6jj-1791216647074-27e01b69d2c0
+
+[]
+
+$ curl -i -X POST $BASE/paintings -H "Content-Type: application/json" -d '{"judul":"Senja di Musi","pelukis":"Rahmat Hidayat","aliran":"realisme","tahunDibuat":2023,"harga":7500000}'
+HTTP/1.1 201 Created
+Cache-Control: public, max-age=0, must-revalidate
+Content-Length: 180
+Content-Type: application/json; charset=utf-8
+Date: Mon, 05 Oct 2026 16:10:47 GMT
+Etag: W/"b4-Ypw11GVemgeiESAyI2hEtKeFrtM"
+Server: Vercel
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Powered-By: Express
+X-Vercel-Cache: MISS
+X-Vercel-Id: sin1::iad1::w226t-1791216647472-f81bfe38158c
+
+{"status":"success","message":"Data berhasil ditambahkan","data":{"id":4,"judul":"Senja di Musi","pelukis":"Rahmat Hidayat","aliran":"realisme","tahunDibuat":2023,"harga":7500000}}
+
+$ curl -i -X POST $BASE/paintings -H "Content-Type: application/json" -d '{"pelukis":"Rahmat Hidayat","aliran":"realisme","harga":7500000}'
+HTTP/1.1 400 Bad Request
+Cache-Control: public, max-age=0, must-revalidate
+Content-Length: 66
+Content-Type: application/json; charset=utf-8
+Date: Mon, 05 Oct 2026 16:10:47 GMT
+Etag: W/"42-XrUvAkJOez2jTxbez6rQcphW3hI"
+Server: Vercel
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Powered-By: Express
+X-Vercel-Cache: MISS
+X-Vercel-Id: sin1::iad1::s4pwt-1791216647863-6eac7f476e53
+
+{"status":"error","message":"Field judul wajib diisi","data":null}
+
+$ curl -i -X POST $BASE/paintings -H "Content-Type: application/json" -d '{"judul":"Senja di Musi","pelukis":"Rahmat Hidayat","aliran":"realisme","tahunDibuat":2023,"harga":"7500000"}'
+HTTP/1.1 400 Bad Request
+Cache-Control: public, max-age=0, must-revalidate
+Content-Length: 89
+Content-Type: application/json; charset=utf-8
+Date: Mon, 05 Oct 2026 16:10:48 GMT
+Etag: W/"59-844hZ/R90w/bcaZhHDf2HZgY/f4"
+Server: Vercel
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Powered-By: Express
+X-Vercel-Cache: MISS
+X-Vercel-Id: sin1::iad1::vkt2x-1791216648239-5903dcdf09d9
+
+{"status":"error","message":"Field harga wajib diisi dan harus berupa angka","data":null}
+
+$ curl -i -X PUT $BASE/paintings/1 -H "Content-Type: application/json" -d '{"judul":"Senja di Musi (Revisi)","pelukis":"Rahmat Hidayat","aliran":"impresionisme","tahunDibuat":2024,"harga":8000000}'
+HTTP/1.1 200 OK
+Cache-Control: public, max-age=0, must-revalidate
+Content-Length: 213
+Content-Type: application/json; charset=utf-8
+Date: Mon, 05 Oct 2026 16:10:48 GMT
+Etag: W/"d5-snUMwssGF/tQwGj+bn0mldE1BJc"
+Server: Vercel
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Powered-By: Express
+X-Vercel-Cache: MISS
+X-Vercel-Id: sin1::iad1::knmfc-1791216648648-9219d094500d
+
+{"status":"success","message":"Data lukisan dengan id 1 berhasil diperbarui","data":{"id":1,"judul":"Senja di Musi (Revisi)","pelukis":"Rahmat Hidayat","aliran":"impresionisme","tahunDibuat":2024,"harga":8000000}}
+
+$ curl -i -X PUT $BASE/paintings/99 -H "Content-Type: application/json" -d '{"judul":"Senja di Musi (Revisi)","pelukis":"Rahmat Hidayat","aliran":"impresionisme","tahunDibuat":2024,"harga":8000000}'
+HTTP/1.1 404 Not Found
+Cache-Control: public, max-age=0, must-revalidate
+Content-Length: 76
+Content-Type: application/json; charset=utf-8
+Date: Mon, 05 Oct 2026 16:10:49 GMT
+Etag: W/"4c-rMUh+y54SJ96aKswIwB/bvt+xYs"
+Server: Vercel
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Powered-By: Express
+X-Vercel-Cache: MISS
+X-Vercel-Id: sin1::iad1::h6bjl-1791216649045-e9f728f3b490
+
+{"status":"error","message":"Data dengan id 99 tidak ditemukan","data":null}
+
+$ curl -i -X DELETE $BASE/paintings/4
+HTTP/1.1 200 OK
+Cache-Control: public, max-age=0, must-revalidate
+Content-Length: 86
+Content-Type: application/json; charset=utf-8
+Date: Mon, 05 Oct 2026 16:10:49 GMT
+Etag: W/"56-jwuneRH3eD1FxIpGmjwvYoKenD4"
+Server: Vercel
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Powered-By: Express
+X-Vercel-Cache: MISS
+X-Vercel-Id: sin1::iad1::shgcx-1791216649667-459005f95c93
+
+{"status":"success","message":"Data lukisan dengan id 4 berhasil dihapus","data":null}
+
+$ curl -i -X DELETE $BASE/paintings/99
+HTTP/1.1 404 Not Found
+Cache-Control: public, max-age=0, must-revalidate
+Content-Length: 76
+Content-Type: application/json; charset=utf-8
+Date: Mon, 05 Oct 2026 16:10:50 GMT
+Etag: W/"4c-rMUh+y54SJ96aKswIwB/bvt+xYs"
+Server: Vercel
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Powered-By: Express
+X-Vercel-Cache: MISS
+X-Vercel-Id: sin1::iad1::hpf5k-1791216650079-78ff56e345d9
+
+{"status":"error","message":"Data dengan id 99 tidak ditemukan","data":null}
+
+$ curl -i $BASE/tidak-ada
+HTTP/1.1 404 Not Found
+Age: 0
+Cache-Control: public, max-age=0, must-revalidate
+Content-Length: 67
+Content-Type: application/json; charset=utf-8
+Date: Mon, 05 Oct 2026 16:10:50 GMT
+Etag: W/"43-mnWOgiR1Vv14BAgBUuWViibSUFE"
+Server: Vercel
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+X-Powered-By: Express
+X-Vercel-Cache: MISS
+X-Vercel-Id: sin1::iad1::bgb6k-1791216650472-048d41a1effc
+
+{"status":"error","message":"Endpoint tidak ditemukan","data":null}

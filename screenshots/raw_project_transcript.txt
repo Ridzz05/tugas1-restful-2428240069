@@ -1,0 +1,98 @@
+$ ls -1
+.gitignore
+.kilo
+.omp
+Laporan_Tugas1_2428240069_M Rizki Algipari.docx
+README.md
+app.js
+node_modules
+package-lock.json
+package.json
+postman_collection.json
+screenshots
+template_contoh.pdf
+template_praktikum.docx
+vercel.json
+
+$ cat package.json
+{
+  "name": "tugas1-restful-2428240069",
+  "version": "1.0.0",
+  "description": "RESTful API Galeri Seni - Lukisan (Topik 14)",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "keywords": [],
+  "author": "M. Rizki Algipari",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
+
+$ nl -ba app.js | head -60
+     1	// ===========================================================================
+     2	// Tugas 1 - RESTful API Express.js
+     3	// Nama    : M. Rizki Algipari
+     4	// NIM     : 2428240069
+     5	// Kelas   : SI5B
+     6	// Topik 14: Galeri Seni - Lukisan
+     7	// Resource: /paintings
+     8	// ===========================================================================
+     9	
+    10	// Impor modul express
+    11	const express = require("express");
+    12	
+    13	// Membuat instance aplikasi Express
+    14	const app = express();
+    15	
+    16	// Middleware bawaan Express untuk membaca body request berformat JSON (req.body)
+    17	app.use(express.json());
+    18	
+    19	// ---------------------------------------------------------------------------
+    20	// Data awal lukisan (disimpan di memori, tanpa database)
+    21	// ---------------------------------------------------------------------------
+    22	let paintings = [
+    23	  // Data lukisan ke-1
+    24	  {
+    25	    id: 1,
+    26	    judul: "Senja di Musi",
+    27	    pelukis: "Rahmat Hidayat",
+    28	    aliran: "realisme",
+    29	    tahunDibuat: 2023,
+    30	    harga: 7500000,
+    31	  },
+    32	  // Data lukisan ke-2
+    33	  {
+    34	    id: 2,
+    35	    judul: "Tari Cahaya Pagi",
+    36	    pelukis: "Siti Nurhaliza",
+    37	    aliran: "impresionisme",
+    38	    tahunDibuat: 2021,
+    39	    harga: 5200000,
+    40	  },
+    41	  // Data lukisan ke-3
+    42	  {
+    43	    id: 3,
+    44	    judul: "Bentuk Tanpa Nama",
+    45	    pelukis: "Bagas Prasetyo",
+    46	    aliran: "abstrak",
+    47	    tahunDibuat: 2024,
+    48	    harga: 9800000,
+    49	  },
+    50	];
+    51	
+    52	// Penomoran id otomatis untuk data baru (lanjutan dari id terakhir data awal)
+    53	let nextId = 4;
+    54	
+    55	// ---------------------------------------------------------------------------
+    56	// Fungsi bantu validasi body lukisan
+    57	// Mengembalikan pesan error (string) bila tidak valid, atau null bila valid
+    58	// ---------------------------------------------------------------------------
+    59	function validasiLukisan(body) {
+    60	  // Field string wajib: judul, pelukis, aliran

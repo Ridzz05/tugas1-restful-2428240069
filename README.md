@@ -12,7 +12,7 @@ RESTful API Express.js sederhana untuk data lukisan (galeri seni).
 ## Tautan
 
 **Repository GitHub:** https://github.com/Ridzz05/tugas1-restful-2428240069
-**Deployment Vercel:** (isi setelah deploy)
+**Deployment Vercel:** https://tugas1-restful-2428240069.vercel.app
 
 ## Cara Menjalankan Lokal
 

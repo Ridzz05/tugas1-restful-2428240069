@@ -1,0 +1,170 @@
+# Local URL: http://localhost:3000
+
+$ curl -s -i --max-time 25 $BASE/
+HTTP/1.1 200 OK
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 284
+ETag: W/"11c-gIU3jzqBmCXTMwlgj0nOr3hbnac"
+Date: Mon, 05 Oct 2026 16:18:15 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"nama":"M. Rizki Algipari","nim":"2428240069","kelas":"SI5B","topik":"Topik 14 - Galeri Seni: Lukisan","resource":"/paintings","endpoints":["GET /","GET /paintings","GET /paintings/:id","GET /paintings?aliran=<aliran>","POST /paintings","PUT /paintings/:id","DELETE /paintings/:id"]}
+
+$ curl -s -i --max-time 25 $BASE/paintings
+HTTP/1.1 200 OK
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 357
+ETag: W/"165-hG+uhLDciLwFa1VOnl5Sj582jlc"
+Date: Mon, 05 Oct 2026 16:18:15 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+[{"id":1,"judul":"Senja di Musi","pelukis":"Rahmat Hidayat","aliran":"realisme","tahunDibuat":2023,"harga":7500000},{"id":2,"judul":"Tari Cahaya Pagi","pelukis":"Siti Nurhaliza","aliran":"impresionisme","tahunDibuat":2021,"harga":5200000},{"id":3,"judul":"Bentuk Tanpa Nama","pelukis":"Bagas Prasetyo","aliran":"abstrak","tahunDibuat":2024,"harga":9800000}]
+
+$ curl -s -i --max-time 25 $BASE/paintings/1
+HTTP/1.1 200 OK
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 114
+ETag: W/"72-RcbDQFNulfg0p1MVtIQ2FGukvmA"
+Date: Mon, 05 Oct 2026 16:18:15 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"id":1,"judul":"Senja di Musi","pelukis":"Rahmat Hidayat","aliran":"realisme","tahunDibuat":2023,"harga":7500000}
+
+$ curl -s -i --max-time 25 $BASE/paintings/99
+HTTP/1.1 404 Not Found
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 76
+ETag: W/"4c-rMUh+y54SJ96aKswIwB/bvt+xYs"
+Date: Mon, 05 Oct 2026 16:18:15 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"status":"error","message":"Data dengan id 99 tidak ditemukan","data":null}
+
+$ curl -s -i --max-time 25 "$BASE/paintings?aliran=realisme"
+HTTP/1.1 200 OK
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 116
+ETag: W/"74-156sGglRMssWAc7F/4WKRhqK5DI"
+Date: Mon, 05 Oct 2026 16:18:15 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+[{"id":1,"judul":"Senja di Musi","pelukis":"Rahmat Hidayat","aliran":"realisme","tahunDibuat":2023,"harga":7500000}]
+
+$ curl -s -i --max-time 25 "$BASE/paintings?aliran=tidakada"
+HTTP/1.1 200 OK
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 2
+ETag: W/"2-l9Fw4VUO7kr8CvBlt4zaMCqXZ0w"
+Date: Mon, 05 Oct 2026 16:18:16 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+[]
+
+$ curl -s -i --max-time 25 -X POST $BASE/paintings -H "Content-Type: application/json" -d '{"judul":"Senja di Musi","pelukis":"Rahmat Hidayat","aliran":"realisme","tahunDibuat":2023,"harga":7500000}'
+HTTP/1.1 201 Created
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 180
+ETag: W/"b4-Ypw11GVemgeiESAyI2hEtKeFrtM"
+Date: Mon, 05 Oct 2026 16:18:16 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"status":"success","message":"Data berhasil ditambahkan","data":{"id":4,"judul":"Senja di Musi","pelukis":"Rahmat Hidayat","aliran":"realisme","tahunDibuat":2023,"harga":7500000}}
+
+$ curl -s -i --max-time 25 -X POST $BASE/paintings -H "Content-Type: application/json" -d '{"pelukis":"Rahmat Hidayat","aliran":"realisme","harga":7500000}'
+HTTP/1.1 400 Bad Request
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 66
+ETag: W/"42-XrUvAkJOez2jTxbez6rQcphW3hI"
+Date: Mon, 05 Oct 2026 16:18:16 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"status":"error","message":"Field judul wajib diisi","data":null}
+
+$ curl -s -i --max-time 25 -X POST $BASE/paintings -H "Content-Type: application/json" -d '{"judul":"Senja di Musi","pelukis":"Rahmat Hidayat","aliran":"realisme","tahunDibuat":2023,"harga":"7500000"}'
+HTTP/1.1 400 Bad Request
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 89
+ETag: W/"59-844hZ/R90w/bcaZhHDf2HZgY/f4"
+Date: Mon, 05 Oct 2026 16:18:16 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"status":"error","message":"Field harga wajib diisi dan harus berupa angka","data":null}
+
+$ curl -s -i --max-time 25 -X PUT $BASE/paintings/1 -H "Content-Type: application/json" -d '{"judul":"Senja di Musi (Revisi)","pelukis":"Rahmat Hidayat","aliran":"impresionisme","tahunDibuat":2024,"harga":8000000}'
+HTTP/1.1 200 OK
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 213
+ETag: W/"d5-snUMwssGF/tQwGj+bn0mldE1BJc"
+Date: Mon, 05 Oct 2026 16:18:16 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"status":"success","message":"Data lukisan dengan id 1 berhasil diperbarui","data":{"id":1,"judul":"Senja di Musi (Revisi)","pelukis":"Rahmat Hidayat","aliran":"impresionisme","tahunDibuat":2024,"harga":8000000}}
+
+$ curl -s -i --max-time 25 -X PUT $BASE/paintings/99 -H "Content-Type: application/json" -d '{"judul":"Senja di Musi (Revisi)","pelukis":"Rahmat Hidayat","aliran":"impresionisme","tahunDibuat":2024,"harga":8000000}'
+HTTP/1.1 404 Not Found
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 76
+ETag: W/"4c-rMUh+y54SJ96aKswIwB/bvt+xYs"
+Date: Mon, 05 Oct 2026 16:18:16 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"status":"error","message":"Data dengan id 99 tidak ditemukan","data":null}
+
+$ curl -s -i --max-time 25 -X DELETE $BASE/paintings/4
+HTTP/1.1 200 OK
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 86
+ETag: W/"56-jwuneRH3eD1FxIpGmjwvYoKenD4"
+Date: Mon, 05 Oct 2026 16:18:16 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"status":"success","message":"Data lukisan dengan id 4 berhasil dihapus","data":null}
+
+$ curl -s -i --max-time 25 -X DELETE $BASE/paintings/99
+HTTP/1.1 404 Not Found
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 76
+ETag: W/"4c-rMUh+y54SJ96aKswIwB/bvt+xYs"
+Date: Mon, 05 Oct 2026 16:18:16 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"status":"error","message":"Data dengan id 99 tidak ditemukan","data":null}
+
+$ curl -s -i --max-time 25 $BASE/tidak-ada
+HTTP/1.1 404 Not Found
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 67
+ETag: W/"43-mnWOgiR1Vv14BAgBUuWViibSUFE"
+Date: Mon, 05 Oct 2026 16:18:16 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+{"status":"error","message":"Endpoint tidak ditemukan","data":null}
+
